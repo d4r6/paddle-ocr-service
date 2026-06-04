@@ -1,16 +1,26 @@
 FROM python:3.11-slim
 
+# Installation des dépendances système corrigées pour l'OCR et OpenCV
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgl1-mesa-glx libglib2.0-0 libsm6 libxext6 libxrender-dev \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copie des fichiers de dépendances Python
+COPY pyproject.toml poetry.lock* requirements.txt* ./
 
-COPY server.py .
+# Installation des dépendances Python (s'adapte si vous utilisez pip classique)
+RUN pip install --no-cache-dir --upgrade pip && \
+    if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; \
+    else pip install --no-cache-dir .; fi
 
-EXPOSE 8791
+# Copie du reste du code de l'application
+COPY . .
 
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8791", "--workers", "2"]
+# Commande de démarrage identique à votre railpack
+CMD ["sh", "-c", "uvicorn galaxy_jarvis_crew.server:app --host 0.0.0.0 --port $PORT"]
