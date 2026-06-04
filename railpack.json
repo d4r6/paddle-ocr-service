@@ -1,5 +1,14 @@
 {
-  "$schema": "https://schema.railpack.com",
+  "$schema": "https://railpack.com",
+  "build": {
+    "packages": [
+      "libgl1",
+      "libglib2.0-0",
+      "libsm6",
+      "libxext6",
+      "libxrender-dev"
+    ]
+  },
   "deploy": {
     "startCommand": "uvicorn galaxy_jarvis_crew.server:app --host 0.0.0.0 --port $PORT"
   }
