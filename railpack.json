@@ -10,6 +10,9 @@
     ]
   },
   "deploy": {
-    "startCommand": "uvicorn galaxy_jarvis_crew.server:app --host 0.0.0.0 --port $PORT"
+    "startCommand": "uvicorn galaxy_jarvis_crew.server:app --host 0.0.0.0 --port $PORT",
+    "env": {
+      "CACHE_BUST": "1"
+    }
   }
 }
